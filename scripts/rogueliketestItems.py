@@ -9,11 +9,17 @@ def regiItemEffect(item_name, effect_func):
 
 #------------------------------------- potions or any usable item
 
-def healEffect(player, target):
-    pass
+def healEffect(player, amount, playerInv, whichItem):
+    if whichItem in playerInv:
+        player.health += amount
+    else:
+        print('how the fuck did you get this message')
 
-def attackPotionEffect(player, target):
-    pass
+def attackPotionEffect(player, amount, playerInv, whichItem):
+    if whichItem in playerInv:
+        player.damage += amount
+    else:
+        print('how the fuck did you get this message')
 
 #------------------------------------- passives
 
@@ -26,4 +32,6 @@ def constUp(player, amount):
 def speedUp(player,amount):
     player.speed += amount
 
-#------------------------------------- spells   
+#------------------------------------- spells  
+
+ 

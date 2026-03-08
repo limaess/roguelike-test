@@ -28,7 +28,6 @@ while isActive:
     if keys[pg.K_q]:
         waveHandler.endWave()
 
-
     drawtext(waveHandler.currentWaveType, font, (255,255,255), 0,0)
     drawtext(f'next element: {waveTypes[1]}', font, (255,255,255), 100,0)
 

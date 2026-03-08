@@ -51,10 +51,13 @@ class TurnHandling():
     def endTurn(self):
         pass
 
-    def endRound(self):
+    def endRound(self, player, enemy):
         whosTurn += 1
         if whosTurn == 5:
             whosTurn = 0
+
+        player.hasAttacked = False
+        enemy.hasAttacked = False
 
     def turnOrderThingie(self):
         pass
@@ -90,12 +93,13 @@ class PlayerCurrencyStats():
 itemEffects = {}
 
 class Passives():
-    def __init__(self, description,name,amount, passiveFunc):
+    def __init__(self, description,name,amount, passiveClass,passiveFunc):
         self.description = description
         self.name = name
         self.amount = amount
         
         self.passiveFunc = passiveFunc
+        self.passiveClass = passiveClass
 
     def applyEffect(self, player, target=None):
         if self.name in itemEffects:
@@ -114,19 +118,20 @@ class Consumables():
             itemEffects[self.name](player, target)
 
 class Spells():
-    def __init__(self, description,name,amount, spellFunc):
+    def __init__(self, description,name,amount, spellFunc, spellClass):
         self.description = description
         self.name = name
         self.amount = amount
 
         self.spellFunc = spellFunc
+        self.spellClass = spellClass
 
     def applyEffect(self, player, target=None):
         if self.name in itemEffects:
             itemEffects[self.name](player, target)
 
 class Player():
-    def __init__(self,constitution, health,damage,speed, playerClass, effectOnSelf):
+    def __init__(self,constitution, health,damage,speed, playerClass, effectOnSelf, whichSpellUsed):
         self.constitution = constitution
         self.health = health
         self.damage = damage
@@ -134,15 +139,28 @@ class Player():
 
         self.maxHealth = constitution * 4
 
-        self.isDamagingSomeone = False
+        self.hasAttacked = False
+        self.whichSpellUsed = whichSpellUsed
         
         self.playerClass = playerClass
-        
         self.effectOnSelf = effectOnSelf
 
+    def basicAttack(self, target):
+        if not target.classWeaknesses == self.playerClass: 
+            target.health -= (self.damage - target.waveBuffs)
+        else:
+            target.health -= (self.damage + target.howWeak)
+        self.hasAttacked = True
+
 class Enemy():
-    def __init__(self, waveBuffs: int):
-        super().__init__(Player)
+    def __init__(self,constitution, health,damage,speed, classWeaknesses, howWeak):
+        self.constitution = constitution
+        self.health = health
+        self.damage = damage
+        self.speed = speed
+
+        self.classWeaknesses = classWeaknesses
+        self.howWeak = howWeak
     
 
 print(waveHandler.currentWaveType)
